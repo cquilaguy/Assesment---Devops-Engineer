@@ -1,30 +1,31 @@
 language: node_js
 node_js:
-  - "16"  # Usa la versión de Node.js compatible con React
+  - "16"
 
-# Configuración de la caché para acelerar la instalación de dependencias
 cache:
   directories:
     - node_modules
 
-# Definir los stages del pipeline
 stages:
   - install_dependencies
-  - run_tests
+  - run_unit_tests
+  - run_integration_tests
 
-# Etapa para instalar las dependencias
 install_dependencies:
   stage: install_dependencies
   script:
     - npm install
 
-# Etapa para ejecutar las pruebas unitarias
-run_tests:
-  stage: run_tests
+run_unit_tests:
+  stage: run_unit_tests
   script:
-    - npm test -- --coverage  # Ejecuta las pruebas unitarias y genera un reporte de cobertura
+    - npm test -- --coverage --testPathPattern=src/__tests__/unit
 
-# Configuración de notificaciones
+run_integration_tests:
+  stage: run_integration_tests
+  script:
+    - npm test -- --coverage --testPathPattern=src/__tests__/integration
+
 notifications:
   email:
     recipients:
@@ -34,4 +35,4 @@ notifications:
 
 branches:
   only:
-    - master
+    - main
